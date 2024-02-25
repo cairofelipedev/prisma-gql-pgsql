@@ -6,16 +6,7 @@ import { prismaClient } from "../lib/db";
 async function createApolloGraphqlServer() {
   const gqlServer = new ApolloServer({
     typeDefs: `
-            type Product {
-              id: ID!
-              name: String!
-              price: Float!
-            }
-
-            type Query {
-              products: [Product!]!
-            }
-
+            ${Product.queries}
             type Mutation {
                ${User.mutations},
                ${Product.mutations}

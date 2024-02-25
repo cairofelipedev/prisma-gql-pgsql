@@ -1,3 +1,11 @@
 export const queries = `#graphql
-    listProducts: [Product]
+    type Product {
+      id: ID!
+      name: String!
+      price: Float!
+    }
+
+    type Query {
+      products: [Product!]!
+    }
 `;
