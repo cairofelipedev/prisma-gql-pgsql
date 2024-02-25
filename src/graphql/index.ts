@@ -1,24 +1,41 @@
 import { ApolloServer } from "@apollo/server";
 import { User } from "./user";
 import { Product } from "./product";
+import { prismaClient } from "../lib/db";
 
 async function createApolloGraphqlServer() {
   const gqlServer = new ApolloServer({
     typeDefs: `
+            type Product {
+              id: ID!
+              name: String!
+              price: Float!
+            }
+
             type Query {
-               hello: String
+              products: [Product!]!
             }
 
             type Mutation {
-               ${User.mutations}
+               ${User.mutations},
+               ${Product.mutations}
             }
         `,
     resolvers: {
       Query: {
-        ...User.resolvers.queries,
+        products: async () => {
+          return await prismaClient.product.findMany({
+            select: {
+              id: true,
+              name: true,
+              price: true,
+            },
+          });
+        },
       },
       Mutation: {
         ...User.resolvers.mutations,
+        ...Product.resolvers.mutations,
       },
     },
   });
